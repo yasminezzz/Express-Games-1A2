@@ -2,34 +2,35 @@
 #include<stdio.h>
 #include<SDL/SDL.h>
 #include"bounding.h"
-
-void update_score(SDL_Rect *personnage, SDL_Rect *ennemi, int stage,int *score )
+#include "Enemy1.h"
+#include "personnage.h"
+void update_score(Perso* P,Enemy1 E, int stage)
 {
-if (check_collision(*personnage, *ennemi)==1)
+if (check_collision(P->position,&E.Enemy_Position)==1)
 {
 if (stage==1)
-*score+=15;
+(P->score)+=15;
 if (stage==2)
-*score+=30;
+(P->score)+=30;
 if (stage==3)
-*score+=45;
+(P->score)+=45;
 }
 } 
-void update_vie(SDL_Rect *personnage,SDL_Rect *ennemi,SDL_Rect *obstacle,SDL_Rect *life_pickup,int stage,float *vie)
+void update_vie(Perso* P,Enemy1 E,SDL_Rect *obstacle,SDL_Rect *life_pickup,int stage)
 {
-if (check_collision(*personnage, *ennemi)==1)
+if (check_collision(P->position,&E.Enemy_Position)==1)
 {
 if (stage==1)
-*vie-=0.5;
+(P->life)-=0.5;
 if (stage==2)
-*vie-=1;
+(P->life)-=1;
 if (stage==3)
-*vie-=2;
+(P->life)-=2;
 }
-if (check_collision(*personnage, *obstacle)==1)
-*vie-=2;
-if (check_collision(*personnage, *life_pickup)==1)
-*vie+=1;
+if (check_collision(P->position, obstacle)==1)
+(P->life)-=2;
+if (check_collision(P->position, life_pickup)==1)
+(P->life)+=1;
 }
 //cette fonction doit etre procedee par SDL_PollEvent
 void time()
