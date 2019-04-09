@@ -6,7 +6,7 @@
 #include "personnage.h"
 void update_score(Perso* P,Enemy1 E, int stage)
 {
-if (check_collision(P->position,&E.Enemy_Position)==1)
+if (check_collision(&P->position,&E.Enemy_Position)==1)
 {
 if (stage==1)
 (P->score)+=15;
@@ -18,7 +18,7 @@ if (stage==3)
 } 
 void update_vie(Perso* P,Enemy1 E,SDL_Rect *obstacle,SDL_Rect *life_pickup,int stage)
 {
-if (check_collision(P->position,&E.Enemy_Position)==1)
+if (check_collision(&P->position,&E.Enemy_Position)==1)
 {
 if (stage==1)
 (P->life)-=0.5;
@@ -27,9 +27,9 @@ if (stage==2)
 if (stage==3)
 (P->life)-=2;
 }
-if (check_collision(P->position, obstacle)==1)
+if (check_collision(&P->position, obstacle)==1)
 (P->life)-=2;
-if (check_collision(P->position, life_pickup)==1)
+if (check_collision(&P->position, life_pickup)==1)
 (P->life)+=1;
 }
 //cette fonction doit etre procedee par SDL_PollEvent
