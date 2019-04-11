@@ -10,10 +10,10 @@
 void initialiser (enigme *e)
 {
 e->image = IMG_Load("enigme template.png");
-e->pos.x = XPe;
-e->pos.y = YPe;
-e->question = '';
-e->reponse = '';
+e->pos.x = 0;// valeur exacte ou elle va etre afficher sur le background
+e->pos.y = 0;
+e->question = '';//strcopy copier chaine vide //strcopy de la question statique
+e->reponse = '';//strcopy la reponse
 e->resultat = 0;
 }
 /*****************************/
@@ -35,8 +35,13 @@ void afficher(enigme *e)
     fond = IMG_Load("enigme template.png");
 
     police = TTF_OpenFont("times.ttf",30); /*chargement police*/
-    
-    texte = TTF_RenderText_Blended(police, "I do not breathe, but I run and jump. I do not eat, but I swim and stretch.\nI do not drink, but I sleep and stand. I do not think, but I grow and play.\nI do not see, but you see me every day. Who am I?", couleurNoire); /*ecriture en mode blended dans SDL_Surface*/
+    /* random [1 10] récuperer le num 
+char ch1[];
+
+
+*/
+    texte = TTF_RenderText_Blended(police, "Which is the largest pyramid in Egypt?\n1.The Great Pyramid of Giza\n2.Pyramid of Khafre", couleurNoire); /*ecriture en mode blended dans SDL_Surface*/
+//on ne peux pas ecrire une reponse dans le jeu, changer en qcm
 
     while (continuer)
     {
@@ -71,129 +76,55 @@ void afficher(enigme *e)
  }
  
  /**********************/
-int resolution(enigme *e, int score)
+int resolution(enigme *e,int reponse)
 {
-SDL_Event event;
-    char im[100], im1[100], im2[100], im3[100];
-    SDL_Surface *image = NULL,*image1 = NULL,*image2 = NULL,*image3 = NULL;
-    SDL_Rect positionim;
-    positionim.x =  0 ;
-    positionim.y =  0 ;
-    sprintf(im,"reponse/%d.png",score);/* composes a string with the same text that would be printed if format was used on printf */
-    image= IMG_Load(im);
-    sprintf(im1,"reponse/%d/1.png",score); 
-    sprintf(im2,"reponse/%d/2.png",score);
-    sprintf(im3,"reponse/%d/3.png",score);
-    image1= IMG_Load(im1);
-    image2= IMG_Load(im2);
-    image3= IMG_Load(im3);
-    SDL_BlitSurface(image,NULL,ecran,&positionim);
-    SDL_Flip(ecran);
-    int continuer =1;
-    int i=0;
-
-
-
-    while (continuer)
+while (continuer)
+{
+    SDL_WaitEvent(&event);
+    switch(event.type)
     {
-        SDL_WaitEvent(&event);
-        switch(event.type)
-        {
         case SDL_QUIT:
-            continuer=0;
+            continuer = 0;
             break;
-
         case SDL_KEYDOWN:
-            switch(event.key.keysym.sym)
+            switch (event.key.keysym.sym)
             {
-
-            case SDLK_RETURN:
-                if(i>=1 && i<=3)
-                {
-
-                    if (i==1 && d%3==1)
-                    {
-                        good(ecran);
-                        continuer=0;
-                    }
-                    else if (i==2 && d%3==2)
-                    {
-                        good(ecran);
-                        continuer=0;
-                    }
-                    else if (i==3 && d%3==0)
-                    {
-                        good(ecran);
-                        continuer=0;
-                    }
-                    else
-                    {
-                        solution(ecran,score);
-                        continuer=0;
-                    }
-                }
-                break;
-
-            case SDLK_DOWN:
-                i++;
-                if(i==4)
-                {
-                    i=1;
-                }
-                if(i==1)
-                {
-                    SDL_BlitSurface(image1,NULL, ecran, &positionim);
-                    SDL_Flip(ecran);
-                    SDL_Delay(500);
-                }
-                if(i==2)
-                {
-                    SDL_BlitSurface(image2,NULL, ecran, &positionim);
-                    SDL_Flip(ecran);
-                    SDL_Delay(500);
-                }
-                if(i==3)
-                {
-                    SDL_BlitSurface(image3,NULL, ecran, &positionim);
-                    SDL_Flip(ecran);
-                    SDL_Delay(500);
-                }
-                ;
-                break;
-            case SDLK_UP:
-                i--;
-                if(i==0)
-                {
-                    i=3;
-                }
-                if(i==4)
-                {
-                    i=1;
-                }
-                if(i==1)
-                {
-                    SDL_BlitSurface(image1,NULL, ecran, &positionim);
-                    SDL_Flip(ecran);
-                    SDL_Delay(500);
-                }
-                if(i==2)
-                {
-                    SDL_BlitSurface(image2,NULL, ecran, &positionim);
-                    SDL_Flip(ecran);
-                    SDL_Delay(500);
-                }
-                if(i==3)
-                {
-                    SDL_BlitSurface(image3,NULL, ecran, &positionim);
-                    SDL_Flip(ecran);
-                    SDL_Delay(500);
-                }
-                break;
+                case SDLK_1: /* sauvegarder reponse 1 */
+                   reponse=1;
+			continuer=0;
+                    break;
             }
-        }
-        //SDL_BlitSurface(image,NULL,ecran,&positionim);
-        SDL_Flip(ecran);
+  case SDL_KEYDOWN:
+            switch (event.key.keysym.sym)
+            {
+                case SDLK_1: /* sauvegarder reponse 2 */
+                   reponse=2;
+		continuer=0;
+                    break;
+            }
+            break;
     }
+}
+return reponse;
+}
+/*****************************/
+
+void aleatoire(enigme *e)
+{
+
+
 
 }
- 
+/************/
+int reponse_verif(int score, int reponse)
+{
+if (reponse==1)
+score=1;
+else if (reponse!=1)
+score=0;
+return score;
+}
+
+
+//randomize un nombre qui va correspondre a une ligne, fscanf cette ligne 
+//comparer la reponse dans la meme ligne
