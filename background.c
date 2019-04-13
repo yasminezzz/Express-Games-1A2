@@ -44,10 +44,6 @@ while (continuer)
         case SDL_QUIT: 
             continuer = 0;
             break;
-
-           case SDL_KEYDOWN: 
-            continuer = 0;
-            break;
     }
 }
   SDL_FreeSurface(imageDeFond);
