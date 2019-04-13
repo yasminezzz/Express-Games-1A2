@@ -4,7 +4,7 @@
 
 
 int initialiser_background(SDL_Surface *ecran,SDL_Surface *imageDeFond,SDL_Rect *positionFond);
-void afficher_background(SDL_Surface *ecran,SDL_Surface *imageDeFond,SDL_Rect positionFond);
+int afficher_background(SDL_Surface *ecran,SDL_Surface *imageDeFond,SDL_Rect positionFond);
 
 
 
