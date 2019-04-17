@@ -18,8 +18,8 @@ ecran=NULL;
 }
 int afficher_background(SDL_Surface *ecran,SDL_Surface *imageDeFond,SDL_Rect positionFond)
 { 
-int continuer=1;
-SDL_Event event;
+
+
 
 SDL_Surface *icon=NULL;
 
@@ -36,18 +36,5 @@ SDL_WM_SetCaption("nom du jeu", NULL);
  imageDeFond = IMG_Load("background.png");
 SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond);
 SDL_Flip(ecran);
-while (continuer)
-{
-    SDL_WaitEvent(&event);
-    switch(event.type) 
-    {
-        case SDL_QUIT: 
-            continuer = 0;
-            break;
-    }
-}
-  SDL_FreeSurface(imageDeFond);
-    SDL_Quit();
 
-    return EXIT_SUCCESS;
 }
