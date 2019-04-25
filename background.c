@@ -16,14 +16,14 @@ ecran=NULL;
     } 
   return EXIT_SUCCESS;
 }
-void afficher_background(SDL_Surface *ecran,SDL_Surface *imageDeFond,SDL_Rect positionFond)
+int afficher_background(SDL_Surface *ecran,SDL_Surface *imageDeFond,SDL_Rect positionFond)
 { 
-int continuer=1;
-SDL_Event event;
+
+
 
 SDL_Surface *icon=NULL;
 
-ecran = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
+ecran = SDL_SetVideoMode(1200,800, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 if (ecran==NULL)
 {
  fprintf(stderr, "Impossible de charger le mode vidéo : %s\n", SDL_GetError());
@@ -33,21 +33,8 @@ if (ecran==NULL)
 icon=IMG_Load("sdl_icone.bmp");
 SDL_WM_SetIcon(icon, NULL);
 SDL_WM_SetCaption("nom du jeu", NULL);
- imageDeFond = IMG_Load("lac_en_montagne.bmp");
+ imageDeFond = IMG_Load("background.png");
 SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond);
 SDL_Flip(ecran);
-while (continuer)
-{
-    SDL_WaitEvent(&event);
-    switch(event.type) 
-    {
-        case SDL_QUIT: 
-            continuer = 0;
-            break;
 
-           case SDL_KEYDOWN: 
-            continuer = 0;
-            break;
-    }
-}
 }
