@@ -10,10 +10,10 @@
 
 int main(int argc, char *argv[])
 {
-	WO WOS;
-	Cha MC;
-	Enemy1 E1;
-	BGS BG;
+	WO *WOS;
+	Cha *MC;
+	Enemy1 *E1;
+	BGS *BG;
 	SDL_Surface *Screen=NULL,*Background0=NULL,*Play1=NULL,*Play2=NULL,*Play3=NULL,*Sets1=NULL,*Sets2=NULL,*Sets3=NULL,*Quit1=NULL,*Quit2=NULL,*Quit3=NULL,*Title=NULL;
 	SDL_Rect PBG0,PP,PS,PQ,PT,OMCP;
 	SDL_Event Event,Event1;
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	int *NP=NULL,*NS=NULL,*NQ=NULL,*NB=NULL,*NC=NULL;
 	SDL_Init(SDL_INIT_VIDEO);
 
-	Screen=SDL_SetVideoMode(1200,700,32,SDL_HWSURFACE | SDL_DOUBLEBUF);
+	Screen=SDL_SetVideoMode(1200,680,32,SDL_HWSURFACE | SDL_DOUBLEBUF);
 	SDL_WM_SetCaption("The Way Back",NULL);
 
 	Play1=IMG_Load("P.png");
@@ -32,7 +32,11 @@ int main(int argc, char *argv[])
 	Quit3=IMG_Load("Q0.png");
 	Title=IMG_Load("Title.png");
 
-
+	WOS=malloc(sizeof(WO));
+	MC=malloc(sizeof(Cha));
+	E1=malloc(sizeof(Enemy1));
+	BG=malloc(sizeof(BGS));
+	
 	PS.x=150;
 	PS.y=350;
 	PQ.x=750;
@@ -55,10 +59,10 @@ int main(int argc, char *argv[])
 	*NB=0;
 	*NC=0;
 
-	Init_Character(&MC);
-	Init_BG(&BG);
-	Initialize_Enemy1(&E1);
-	Init_All_Objs(&WOS);
+	Init_Character(MC);
+	Init_BG(BG);
+	Initialize_Enemy1(E1);
+	Init_All_Objs(WOS);
 	while(Exit!=1)
 	{
 		SDL_PollEvent(&Event);
@@ -89,23 +93,23 @@ int main(int argc, char *argv[])
 					else if(Event.type==SDL_MOUSEBUTTONUP)
 					{
 						SDL_EnableKeyRepeat(10, 10);
-						while(GamePlay!=0)
+						while(GamePlay!=0) //GAME LOOOOOOOOOOOOOOP HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEREEEEEEEEE
 						{
 							SDL_PollEvent(&Event1);
 							SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 255, 255, 255));
-							Display_BG(&BG,Screen);
-							Display_All_World_Objects(&WOS,Screen);
-							if(Collision_Enemy(&MC,&E1)==1||Collision_Enemy(&MC,&E1)==2||Collision_Enemy(&MC,&E1)==3)
+							Display_BG(BG,Screen);
+							Display_All_World_Objects(WOS,Screen);
+							if(Collision_Enemy(MC,E1)==1)
 							{
-								SDL_BlitSurface(E1.DImg,NULL,Screen,&E1.GP);
-								E1.Life=0;
+								SDL_BlitSurface(E1->DImg,NULL,Screen,&E1->GP);
+								E1->Life=0;
 							}
 							else
 	 						{
-								Random_Movement(&E1,Screen);
+								Random_Movement(E1,Screen);
 							}
-							Display_Character(&MC,Screen);
-							Jump(&MC,&E1,OMCP,&WOS);
+							Display_Character(MC,Screen);
+							Jump(MC,E1,OMCP,WOS);
 							SDL_Flip(Screen);
 							switch(Event1.type)
 							{
@@ -115,76 +119,126 @@ int main(int argc, char *argv[])
 									{
 										case SDLK_UP:
 										{
-											if(MC.MinJ==1)
+											if(MC->MinJ==1)
 											{
-												MC.MaxJ=1;
-												MC.MinJ=0;
-												OMCP.y=MC.MCP.y;
+												MC->MaxJ=1;
+												MC->MinJ=0;
+												OMCP.y=MC->MCP.y;
 											}
-											else if(MC.DIR==1)
+											else if(MC->DIR==1)
 											{
-												MC.Img=IMG_Load("WR1.png");
+												MC->Img=IMG_Load("WR1.png");
 											}
 											else
 											{
-												MC.Img=IMG_Load("WL1.png");
+												MC->Img=IMG_Load("WL1.png");
 											}
 										}
 										break;
 										case SDLK_RIGHT:
 										{
-											if(MC.MCP.x>=800)
+											if(MC->MCP.x>=800)
 											{
-												if(BG.BGP.x+3800>0)
+												if(BG->BGP.x+3800>0)
 												{
-													ScrollL(&BG.BGP);
-													ScrollL(&WOS.GR1P);
-													ScrollL(&E1.Enemy_Position);
-													ScrollL(&E1.C);
-													ScrollL(&E1.GP);
+													ScrollL(&BG->BGP);
+													ScrollL(&WOS->GR1P1);
+													ScrollL(&WOS->GR1P2);
+													ScrollL(&WOS->GR1P3);
+													ScrollL(&WOS->GRS1P);
+													ScrollL(&WOS->GRXSP1);
+													ScrollL(&WOS->GRXSP2);
+													ScrollL(&WOS->GRXSP3);
+													ScrollL(&WOS->GRXSP4);
+													ScrollL(&WOS->GRXSP5);
+													ScrollL(&WOS->GRXSP6);
+													ScrollL(&WOS->GRXSP7);
+													ScrollL(&WOS->GRXSP8);
+													ScrollL(&WOS->GRXSP9);
+													ScrollL(&WOS->GRXSP10);
+													ScrollL(&WOS->GRXSP11);
+													ScrollL(&WOS->GRXSP12);
+													ScrollL(&WOS->GRXSP13);
+													ScrollL(&WOS->GR2P1);
+													ScrollL(&WOS->GR2P2);
+													ScrollL(&WOS->GREP);
+													ScrollL(&WOS->SpkP1);
+													ScrollL(&WOS->SpkP2);
+													ScrollL(&E1->Enemy_Position);
+													ScrollL(&E1->C);
+													ScrollL(&E1->GP);
+												}
+												else if(MC->MCP.x<=1100)
+												{
+													Move_CharR(MC);
 												}
 											}
 											else
 											{
-												Move_CharR(&MC);
+												Move_CharR(MC);
 											}
-											if(MC.MinJ==1)
+											if(MC->MinJ==1)
 											{
-												Anim_CharR(&MC,Screen,NC);
+												Anim_CharR(MC,Screen,NC);
 											}
 											else
 											{
-												MC.Img=IMG_Load("WR1.png");
+												MC->Img=IMG_Load("WR1.png");
 											}
-											MC.DIR=1;
+											MC->DIR=1;
 										}
 										break;
 										case SDLK_LEFT:
 										{
-											if(MC.MCP.x<=400)
+											if(MC->MCP.x<=400)
 											{
-												if(BG.BGP.x<0)
+												if(BG->BGP.x<0)
 												{
-													ScrollR(&BG.BGP);
-													ScrollR(&WOS.GR1P);
-													ScrollR(&E1.Enemy_Position);
-													ScrollR(&E1.C);
-													ScrollR(&E1.GP);
+													ScrollR(&BG->BGP);
+													ScrollR(&WOS->GR1P1);
+													ScrollR(&WOS->GR1P2);
+													ScrollR(&WOS->GR1P3);
+													ScrollR(&WOS->GRS1P);
+													ScrollR(&WOS->GRXSP1);
+													ScrollR(&WOS->GRXSP2);
+													ScrollR(&WOS->GRXSP3);
+													ScrollR(&WOS->GRXSP4);
+													ScrollR(&WOS->GRXSP5);
+													ScrollR(&WOS->GRXSP6);
+													ScrollR(&WOS->GRXSP7);
+													ScrollR(&WOS->GRXSP8);
+													ScrollR(&WOS->GRXSP9);
+													ScrollR(&WOS->GRXSP10);
+													ScrollR(&WOS->GRXSP11);
+													ScrollR(&WOS->GRXSP12);
+													ScrollR(&WOS->GRXSP13);
+													ScrollR(&WOS->GR2P1);
+													ScrollR(&WOS->GR2P2);
+													ScrollR(&WOS->GREP);
+													ScrollR(&WOS->SpkP1);
+													ScrollR(&WOS->SpkP2);
+													ScrollR(&E1->Enemy_Position);
+													ScrollR(&E1->C);
+													ScrollR(&E1->GP);
+												}
+												else if(MC->MCP.x>=100)
+												{
+													Move_CharL(MC);
 												}
 											}
 											else
 											{
-												Move_CharL(&MC);
+												Move_CharL(MC);
 											}
-											if(MC.MinJ==1)
+											if(MC->MinJ==1)
 											{
-												Anim_CharL(&MC,Screen,NC);
+												Anim_CharL(MC,Screen,NC);
 											}
 											else
 											{
-												MC.Img=IMG_Load("WL1.png");
+												MC->Img=IMG_Load("WL1.png");
 											}
-											MC.DIR=0;
+											MC->DIR=0;
 										}
 										break;
 										case SDLK_ESCAPE:
@@ -199,42 +253,29 @@ int main(int argc, char *argv[])
 								{
 									switch(Event1.key.keysym.sym)
 									{
-										case SDLK_UP:
-										{
-											if(MC.MinJ==1)
-											{
-												MC.Img=IMG_Load("SR1.png");
-												if(MC.DIR==0)
-												{
-													MC.Img=IMG_Load("SL1.png");
-												}
-											}
-											
-										}
-										break;
 										case SDLK_RIGHT:
 										{
 											*NC=0;
-											if(MC.MinJ==1)
+											if(MC->MinJ==1)
 											{
-												MC.Img=IMG_Load("SR1.png");
+												MC->Img=IMG_Load("SR1.png");
 											}
 											else
 											{
-												MC.Img=IMG_Load("WR1.png");
+												MC->Img=IMG_Load("WR1.png");
 											}	
 										}
 										break;
 										case SDLK_LEFT:
 										{
 											*NC=0;
-											if(MC.MinJ==1)
+											if(MC->MinJ==1)
 											{
-												MC.Img=IMG_Load("SL1.png");
+												MC->Img=IMG_Load("SL1.png");
 											}
 											else
 											{
-												MC.Img=IMG_Load("WL1.png");
+												MC->Img=IMG_Load("WL1.png");
 											}
 										}
 										break;
@@ -319,6 +360,10 @@ int main(int argc, char *argv[])
 	SDL_FreeSurface(Quit1);
 	SDL_FreeSurface(Quit2);
 	SDL_FreeSurface(Quit3);
+	free(WOS);
+	free(MC);
+	free(E1);
+	free(BG);
 	SDL_QUIT;
 	return EXIT_SUCCESS;
 }

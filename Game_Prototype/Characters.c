@@ -23,13 +23,13 @@ typedef struct Character
 
 void Init_Character(Cha *Ch)
 {
-	Ch->Img=IMG_Load("SR1.png");
-	Ch->MCP.x=450;
-	Ch->MCP.y=364;
+	Ch->Img=IMG_Load("WR1.png");
+	Ch->MCP.x=150;
+	Ch->MCP.y=500;
 	Ch->MS=4;
 	Ch->Health=100;
 	Ch->Score=0;
-	Ch->JH=100;
+	Ch->JH=300;
 	Ch->MaxJ=0;
 	Ch->MinJ=0;
 	Ch->DIR=1;

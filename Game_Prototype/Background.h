@@ -8,7 +8,37 @@ typedef struct Background {
 
 typedef struct world_objects {
 	SDL_Surface *GR1;
-	SDL_Rect GR1P;
+	SDL_Surface *GRS1;
+	SDL_Surface *GR2;
+	SDL_Surface *GRXS;
+	SDL_Surface *GRE;
+	SDL_Surface *Spikes;
+	SDL_Surface *Box;
+	SDL_Surface *Key;
+	SDL_Rect GR1P1;
+	SDL_Rect GR1P2;
+	SDL_Rect GR1P3;
+	SDL_Rect GRS1P;
+	SDL_Rect GRXSP1;
+	SDL_Rect GRXSP2;
+	SDL_Rect GRXSP3;
+	SDL_Rect GRXSP4;
+	SDL_Rect GRXSP5;
+	SDL_Rect GRXSP6;
+	SDL_Rect GRXSP7;
+	SDL_Rect GRXSP8;
+	SDL_Rect GRXSP9;
+	SDL_Rect GRXSP10;
+	SDL_Rect GRXSP11;
+	SDL_Rect GRXSP12;
+	SDL_Rect GRXSP13;
+	SDL_Rect GR2P1;
+	SDL_Rect GR2P2;
+	SDL_Rect GREP;
+	SDL_Rect SpkP1;
+	SDL_Rect SpkP2;
+	//SDL_Rect BoxP;
+	//SDL_Rect KeyP;
 }WO;
 
 void Init_All_Objs(WO *WOS);

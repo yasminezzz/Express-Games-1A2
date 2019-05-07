@@ -14,7 +14,7 @@ void Random_Movement(Enemy1 *E1, SDL_Surface *Destination)
 	{
 		if(E1->R==1)
 		{
-			if(E1->Enemy_Position.x==E1->C.x+300)
+			if(E1->Enemy_Position.x==E1->C.x+150)
 			{
 				E1->R=0;
 				E1->L=1;
@@ -29,7 +29,7 @@ void Random_Movement(Enemy1 *E1, SDL_Surface *Destination)
 		}
 		else if(E1->L==1)
 		{
-			if(E1->Enemy_Position.x==E1->C.x-300)
+			if(E1->Enemy_Position.x==E1->C.x-150)
 			{
 				E1->R=1;
 				E1->L=0;

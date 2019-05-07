@@ -8,11 +8,11 @@ void Initialize_Enemy1(Enemy1 *E1)
 {
 	E1->Enemy_Picture_R=IMG_Load("Enemy1_R.png");
 	E1->Enemy_Picture_L=IMG_Load("Enemy1_L.png");
-	E1->DImg = IMG_Load("DImg.png");
-	E1->Enemy_Position.x=600;
-	E1->Enemy_Position.y=465;
-	E1->C.x=600;
-	E1->C.y=465;
+	E1->DImg=IMG_Load("DImg.png");
+	E1->Enemy_Position.x=1000;
+	E1->Enemy_Position.y=590;
+	E1->C.x=1000;
+	E1->C.y=590;
 	E1->GP.x=0;
 	E1->GP.y=0;
 	E1->Life=100;

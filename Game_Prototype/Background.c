@@ -15,24 +15,115 @@
 void Init_All_Objs(WO *WOS)
 {
 	WOS->GR1=IMG_Load("GR1.png");
-	WOS->GR1P.x=0;
-	WOS->GR1P.y=524;
+	WOS->GRS1=IMG_Load("GRS1.png");
+	WOS->GR2=IMG_Load("GR2.png");
+	WOS->GRXS=IMG_Load("GRXS.png");
+	WOS->GRE=IMG_Load("GRE.png");
+	WOS->Spikes=IMG_Load("Spikes.png");
+	
+	WOS->GR1P1.x=0;
+	WOS->GR1P1.y=650;
+	WOS->GR1P2.x=1997;
+	WOS->GR1P2.y=650;
+	WOS->GR1P3.x=2105;
+	WOS->GR1P3.y=294;
+	WOS->GR2P1.x=1380;
+	WOS->GR2P1.y=548;
+	WOS->GR2P2.x=1729;
+	WOS->GR2P2.y=548;
+	WOS->GRXSP1.x=3356;
+	WOS->GRXSP1.y=578;
+	WOS->GRXSP2.x=3495;
+	WOS->GRXSP2.y=518;
+	WOS->GRXSP3.x=3628;
+	WOS->GRXSP3.y=458;
+	WOS->GRXSP4.x=3766;
+	WOS->GRXSP4.y=390;
+	WOS->GRXSP5.x=3680;
+	WOS->GRXSP5.y=162;
+	WOS->GRXSP6.x=3496;
+	WOS->GRXSP6.y=220;
+	WOS->GRXSP7.x=2998;
+	WOS->GRXSP7.y=206;
+	WOS->GRXSP8.x=2396;
+	WOS->GRXSP8.y=206;
+	WOS->GRXSP9.x=1948;
+	WOS->GRXSP9.y=205;
+	WOS->GRXSP10.x=1730;
+	WOS->GRXSP10.y=205;
+	WOS->GRXSP11.x=1510;
+	WOS->GRXSP11.y=205;
+	WOS->GRXSP12.x=1290;
+	WOS->GRXSP12.y=205;
+	WOS->GRXSP13.x=1072;
+	WOS->GRXSP13.y=205;
+	WOS->GRS1P.x=3950;
+	WOS->GRS1P.y=310;
+	WOS->SpkP1.x=2898;
+	WOS->SpkP1.y=264;
+	WOS->SpkP2.x=2295;
+	WOS->SpkP2.y=264;
+	WOS->GREP.x=464;
+	WOS->GREP.y=0;
 }
 
 
 void Init_BG(BGS *BG)
 {
-	BG->Background=IMG_Load("GBG.png");
+	BG->Background=IMG_Load("MBG.png");
 	BG->BGP.x=0;
 	BG->BGP.y=0;
 }
 
 void Display_All_World_Objects(WO *WOS, SDL_Surface *Screen)
 {
-	SDL_Rect Rep1;
+	SDL_Rect Rep1,Rep2,Rep3,Rep4,Rep5,Rep6,Rep7,Rep8,Rep9,Rep10,Rep11,Rep12,Rep13,Rep14,Rep15,Rep16,Rep17,Rep18,Rep19,Rep20,Rep21,Rep22;
 
-	Rep1=WOS->GR1P;
+	Rep1=WOS->GR1P1;
+	Rep2=WOS->GR1P2;
+	Rep3=WOS->GR1P3;
+	Rep4=WOS->GRS1P;
+	Rep5=WOS->GRXSP1;
+	Rep6=WOS->GRXSP2;
+	Rep7=WOS->GRXSP3;
+	Rep8=WOS->GRXSP4;
+	Rep9=WOS->GRXSP5;
+	Rep10=WOS->GRXSP6;
+	Rep11=WOS->GRXSP7;
+	Rep12=WOS->GRXSP8;
+	Rep13=WOS->GRXSP9;
+	Rep14=WOS->GRXSP10;
+	Rep15=WOS->GRXSP11;
+	Rep16=WOS->GRXSP12;
+	Rep17=WOS->GRXSP13;
+	Rep18=WOS->GR2P1;
+	Rep19=WOS->GR2P2;
+	Rep20=WOS->GREP;
+	Rep21=WOS->SpkP1;
+	Rep22=WOS->SpkP2;
+	
 	SDL_BlitSurface(WOS->GR1,NULL,Screen,&Rep1);
+	SDL_BlitSurface(WOS->GR1,NULL,Screen,&Rep2);
+	SDL_BlitSurface(WOS->GR1,NULL,Screen,&Rep3);
+	SDL_BlitSurface(WOS->GRS1,NULL,Screen,&Rep4);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep5);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep6);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep7);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep8);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep9);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep10);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep11);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep12);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep13);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep14);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep15);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep16);
+	SDL_BlitSurface(WOS->GRXS,NULL,Screen,&Rep17);
+	SDL_BlitSurface(WOS->GR2,NULL,Screen,&Rep18);
+	SDL_BlitSurface(WOS->GR2,NULL,Screen,&Rep19);
+	SDL_BlitSurface(WOS->GRE,NULL,Screen,&Rep20);
+	SDL_BlitSurface(WOS->Spikes,NULL,Screen,&Rep21);
+	SDL_BlitSurface(WOS->Spikes,NULL,Screen,&Rep22);
 }
 
 void Display_BG(BGS *BG,SDL_Surface *Screen)
