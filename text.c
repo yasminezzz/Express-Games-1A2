@@ -42,13 +42,13 @@ void initTextAttributes(Text* T)
 	T->couleurShadow.b = 255;
 
 	strcpy(T->txt, "");
-	T->positionText.x = 200;
+	T->positionText.x = 600;
 	T->positionText.y = 50;	
 }
 
 void update_txt(Text* T, int score)
 {
-	sprintf(T->txt,"*** score = %d ***",score);
+	sprintf(T->txt," *** score = %d ***",score);
 }
 
 void displayText(Text T,SDL_Surface *screen)

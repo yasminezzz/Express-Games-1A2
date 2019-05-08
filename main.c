@@ -1,95 +1,62 @@
-#include <SDL/SDL.h>
-#include "life.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include "text.h"
 #include <SDL/SDL_ttf.h>
-int main(int argc, char *argv[])
+#include "text.h"
+
+
+
+int main()
 {
-char path_font [500] ="Ubuntu-Title.ttf";
-TTF_Font *police = NULL;
-Text txt;
- SDL_Surface *lifebar=NULL;
-    SDL_Surface *ecran = NULL, *imageDeFond = NULL, *sapin = NULL,*sapin2= NULL, *zozor = NULL;
-    SDL_Rect positionZozor;
-int continuer=1,score=0;
-SDL_Event event;
-SDL_Rect positionlifebar,positionFond, positionSapin,positionSapin2;
-float life=10;
-    positionlifebar.x = 10;
-    positionlifebar.y = 20;
-    positionFond.x = 0;
-    positionFond.y = 0;
-    positionSapin.x = 500;
-    positionSapin.y = 300;
- positionSapin2.x =300;
-    positionSapin2.y = 300;
- 
-    SDL_Init(SDL_INIT_VIDEO);
-init_text(&txt,path_font);
- 
 
-    ecran = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE);
-    SDL_WM_SetCaption("Chargement d'images en SDL", NULL);
-    imageDeFond = IMG_Load("lac_en_montagne.bmp");
-    //SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond);
-    sapin = IMG_Load("sapin.png");
-sapin2 = IMG_Load("sapin.png");
-  zozor = SDL_LoadBMP("zozor.bmp");
-SDL_SetColorKey(zozor, SDL_SRCCOLORKEY, SDL_MapRGB(zozor->format, 0, 0, 255));
- positionZozor.x = ecran->w / 2 - zozor->w / 2;
-    positionZozor.y = ecran->h / 2 - zozor->h / 2;
+char path_font [500] ="Ubuntu-Title.ttf";	
 
-    //SDL_BlitSurface(sapin, NULL, ecran, &positionSapin);
-    SDL_Flip(ecran);
-  
-  SDL_EnableKeyRepeat(10, 10); 
-     while (continuer)
-    {if(positionZozor.y>300)
-life-=1;
-if(positionZozor.x>500)
-score+=10;
-else if (positionZozor.x<300)
-score-=10;
- update_txt(&txt,score);
-        SDL_WaitEvent(&event);
-        switch(event.type)
-        {
-            case SDL_QUIT:
-                continuer = 0;
- case SDL_KEYDOWN:
-                switch(event.key.keysym.sym)
-                {
-                    case SDLK_UP: // Flèche haut
-                        positionZozor.y--;
-                        break;
-                    case SDLK_DOWN: // Flèche bas
-                        positionZozor.y++;
-                        break;
-                    case SDLK_RIGHT: // Flèche droite
-                        positionZozor.x++;
-                        break;
-                    case SDLK_LEFT: // Flèche gauche
-                        positionZozor.x--;
-                        break;
-                }
-                break;       
-         }
+	int continuer = 1;
+	SDL_Event event;
+	Text txt;
+	SDL_Surface *screen=NULL;
+	TTF_Font *police = NULL;
+	
 
-SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond);
-SDL_BlitSurface(sapin, NULL, ecran, &positionSapin);
-SDL_BlitSurface(sapin2, NULL, ecran, &positionSapin2);
- SDL_BlitSurface(zozor, NULL, ecran, &positionZozor);
-display_life(life,ecran,lifebar,&positionlifebar); 
-displayText(txt,ecran); 
-      SDL_Flip(ecran);
-    }
-freeText(&txt);
-    SDL_FreeSurface(zozor);
-    SDL_FreeSurface(imageDeFond);
-    SDL_FreeSurface(lifebar);
-    SDL_Quit();
+	int it = 0;
+ screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	it = init_text(&txt, path_font);
 
-    return EXIT_SUCCESS;
+	if(it == -1)
+	{
+		continuer = 0;	
+	}
+
+	//Appui continu sur les touches
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
+
+	// GAME LOOP
+	while(continuer) 
+	{
+		/*********************** INPUT ************************/
+		if (SDL_PollEvent(&event)) 
+		{				
+		switch (event.type) 
+	{
+		case SDL_QUIT:
+			continuer=0;
+			break;	
+	}
+SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 255, 255, 255));
+		
 }
+
+		update_txt(&txt,3000);
+	
+		displayText(txt,screen);
+		
+		SDL_Flip(screen);
+		
+	}
+        freeText(&txt);
+  SDL_Quit();
+	
+	return(0);
+}
+
