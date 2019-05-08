@@ -1,194 +1,426 @@
-//Express-Games-1A2 Guys this is the menu ive had problems updoaling the main.c
-
-
-
-//The headers
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL/SDL_mixer.h>
-#include <assert.h>
+#include "Rand_Move.h"
+#include "Background.h"
+#include "Characters.h"
+#include "GameMechanics.h"
+
+SDL_Surface *load_Escapeimage( )
+{
+    //Temporary storage for the image that's loaded
+    SDL_Surface* loadedImage = NULL;
+
+    //The optimized image that will be used
+    SDL_Surface* optimizedImage = NULL;
+
+    //Load the image
+    loadedImage = IMG_Load("popupsave.png");
+
+    //If nothing went wrong in loading the image
+    if( loadedImage != NULL )
+    {
+        //Create an optimized image
+        optimizedImage = SDL_DisplayFormat( loadedImage );
+
+        //Free the old image
+        SDL_FreeSurface( loadedImage );
+    }
+
+    //Return the optimized image
+    return optimizedImage;
+}
+
+void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination )
+{
+    //Make a temporary rectangle to hold the offsets
+    SDL_Rect offset;
+
+    //Give the offsets to the rectangle
+    offset.x = x;
+    offset.y = y;
+
+    //Blit the surface
+    SDL_BlitSurface( source, NULL, destination, &offset );
+}
 int main(int argc, char *argv[])
 {
-    SDL_Surface *ecran = NULL, *imageDeFond = NULL, *title = NULL,*Credits = NULL , *Credits2 = NULL , *Settings3 = NULL, *Credits3 = NULL , *Play = NULL , *Settings = NULL , *Quit = NULL , *Set = NULL , *Play2 = NULL , *Settings2 = NULL , *Quit2 = NULL ;
+	WO *WOS;
+	Cha *MC;
+	Enemy1 *E1;
+	BGS *BG;
+	SDL_Surface *Screen=NULL,*Background0=NULL,*Play1=NULL,*Play2=NULL,*Play3=NULL,*Sets1=NULL,*Sets2=NULL,*Sets3=NULL,*Quit1=NULL,*Quit2=NULL,*Quit3=NULL,*Title=NULL;
+	SDL_Rect PBG0,PP,PS,PQ,PT,OMCP;
+	SDL_Event Event,Event1, Event3;
+	int Exit=0,GamePlay=1;
+	int *NP=NULL,*NS=NULL,*NQ=NULL,*NB=NULL,*NC=NULL;
+	SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_Rect positionFond,positionPlay,positionSettings,positionQuit,positiontitle,positionCredits;
-int mouse;
+	Screen=SDL_SetVideoMode(1200,680,32,SDL_HWSURFACE | SDL_DOUBLEBUF);
+	SDL_WM_SetCaption("The Way Back",NULL);
 
-//Title
-positiontitle.x = 0;
-positiontitle.y = 0;
-//Fond
-positionFond.x = 0;
-positionFond.y = 0;
-//PLAY
-positionPlay.x = 330;
-positionPlay.y = 200;
-positionPlay.w = 140;  
-positionPlay.h = 100;
-//SETTINGS
-positionSettings.x = 330;
-positionSettings.y = 300;
-positionSettings.w = 140;
-positionSettings.h = 100; 
-//QUIT
-positionQuit.x = 330;
-    positionQuit.y = 390;
-positionQuit.w = 140;
-positionQuit.h = 100;
- //Credits 
-positionCredits.x = 330;
-positionCredits.y = 500;
-positionCredits.w = 140;
-positionCredits.h = 100;
-    SDL_Init(SDL_INIT_VIDEO);
-//music
-Mix_Chunk *click = NULL;
-Mix_OpenAudio(44100,AUDIO_S16SYS,1,4096);
-Mix_Music *music;
-music = Mix_LoadMUS("music2.ogg");
-click = Mix_LoadWAV("click.wav");
-Mix_PlayMusic(music,-1);
+	Play1=IMG_Load("P.png");
+	Play3=IMG_Load("P0.png");
+	Sets1=IMG_Load("S.png");
+	Sets3=IMG_Load("S0.png");
+	Quit1=IMG_Load("Q.png");
+	Quit3=IMG_Load("Q0.png");
+	Title=IMG_Load("Title.png");
 
- 
-    ecran = SDL_SetVideoMode(800,600, 32, SDL_HWSURFACE);
-    SDL_WM_SetCaption("Seeking treasures", NULL);
-Set = IMG_Load("fond.jpg");
-Credits = IMG_Load("Credits.png");
-Credits2 = IMG_Load("Credits2.png");
- Credits3 = IMG_Load("Credits_page.png");
-Settings3 = IMG_Load("Settings_page.png");
-    imageDeFond = IMG_Load("fond.jpg");
-    SDL_BlitSurface(imageDeFond, NULL, ecran, &positionFond);
- title = IMG_Load("title.png");
-SDL_BlitSurface(title, NULL, ecran, &positiontitle);
-Play = IMG_Load("Play.png");
+	WOS=malloc(sizeof(WO));
+	MC=malloc(sizeof(Cha));
+	E1=malloc(sizeof(Enemy1));
+	BG=malloc(sizeof(BGS));
+	
+	PS.x=150;
+	PS.y=350;
+	PQ.x=750;
+	PQ.y=350;
+	PP.x=450;
+	PP.y=230;
+	PT.x=300;
+	PT.y=0;
+	PBG0.x=0;
+	PBG0.y=0;
 
-    SDL_BlitSurface(Play, NULL, ecran, &positionPlay);
- 
-    
-Settings = IMG_Load("Settings.png");
+	NC=malloc(sizeof(int));
+	NP=malloc(sizeof(int));
+	NS=malloc(sizeof(int));
+	NQ=malloc(sizeof(int));
+	NB=malloc(sizeof(int));
+	*NP=0;
+	*NS=0;
+	*NQ=0;
+	*NB=0;
+	*NC=0;
 
-    SDL_BlitSurface(Settings, NULL, ecran, &positionSettings);
-    SDL_Flip(ecran);
-Quit = IMG_Load("Quit.png");
+	Init_Character(MC);
+	Init_BG(BG);
+	Initialize_Enemy1(E1);
+	Init_All_Objs(WOS);
+	while(Exit!=1)
+	{
+		SDL_PollEvent(&Event);
+		switch(Event.type)
+		{
+			case SDL_QUIT:
+				Exit=1;
+			break;
+		}
+		SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 255, 255, 255));
+		Background0=Anim_Background0(Background0,Screen,PBG0,NB);
+		SDL_BlitSurface(Title,NULL,Screen,&PT);
+		if((Event.motion.y>PP.y+35)&&(Event.motion.y<PP.y+265)&&(Event.motion.x>PP.x+35)&&(Event.motion.x<PP.x+265))
+		{
+				Anim_PlayB(Play2,Screen,PP,NP);
+				SDL_BlitSurface(Sets1,NULL,Screen,&PS);
+				SDL_BlitSurface(Quit1,NULL,Screen,&PQ);
+				if(Event.button.button==SDL_BUTTON_LEFT)
+				{
+					if(Event.type==SDL_MOUSEBUTTONDOWN)
+					{
+						SDL_BlitSurface(Play3,NULL,Screen,&PP);
+						SDL_BlitSurface(Sets1,NULL,Screen,&PS);
+						SDL_BlitSurface(Quit1,NULL,Screen,&PQ);
+						SDL_Flip(Screen);
+						SDL_Delay(300);
+					}
+					else if(Event.type==SDL_MOUSEBUTTONUP)
+					{
+						SDL_EnableKeyRepeat(10, 10);
+						while(GamePlay!=0) //GAME LOOOOOOOOOOOOOOP HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEREEEEEEEEE
+						{
+							SDL_PollEvent(&Event1);
+							SDL_FillRect(Screen, NULL, SDL_MapRGB(Screen->format, 255, 255, 255));
+							Display_BG(BG,Screen);
+							Display_All_World_Objects(WOS,Screen);
+							if(Collision_Enemy(MC,E1)==1)
+							{
+								SDL_BlitSurface(E1->DImg,NULL,Screen,&E1->GP);
+								E1->Life=0;
+							}
+							else
+	 						{
+								Random_Movement(E1,Screen);
+							}
+							Display_Character(MC,Screen);
+							Jump(MC,E1,OMCP,WOS);
+							SDL_Flip(Screen);
+							switch(Event1.type)
+							{
+								case SDL_KEYDOWN:
+								{
+									switch(Event1.key.keysym.sym)
+									{
+										case SDLK_UP:
+										{
+											if(MC->MinJ==1)
+											{
+												MC->MaxJ=1;
+												MC->MinJ=0;
+												OMCP.y=MC->MCP.y;
+											}
+											else if(MC->DIR==1)
+											{
+												MC->Img=IMG_Load("WR1.png");
+											}
+											else
+											{
+												MC->Img=IMG_Load("WL1.png");
+											}
+										}
+										break;
+										case SDLK_RIGHT:
+										{
+											if(MC->MCP.x>=800)
+											{
+												if(BG->BGP.x+3800>0)
+												{
+													ScrollL(&BG->BGP);
+													ScrollL(&WOS->GR1P1);
+													ScrollL(&WOS->GR1P2);
+													ScrollL(&WOS->GR1P3);
+													ScrollL(&WOS->GRS1P);
+													ScrollL(&WOS->GRXSP1);
+													ScrollL(&WOS->GRXSP2);
+													ScrollL(&WOS->GRXSP3);
+													ScrollL(&WOS->GRXSP4);
+													ScrollL(&WOS->GRXSP5);
+													ScrollL(&WOS->GRXSP6);
+													ScrollL(&WOS->GRXSP7);
+													ScrollL(&WOS->GRXSP8);
+													ScrollL(&WOS->GRXSP9);
+													ScrollL(&WOS->GRXSP10);
+													ScrollL(&WOS->GRXSP11);
+													ScrollL(&WOS->GRXSP12);
+													ScrollL(&WOS->GRXSP13);
+													ScrollL(&WOS->GR2P1);
+													ScrollL(&WOS->GR2P2);
+													ScrollL(&WOS->GREP);
+													ScrollL(&WOS->SpkP1);
+													ScrollL(&WOS->SpkP2);
+													ScrollL(&E1->Enemy_Position);
+													ScrollL(&E1->C);
+													ScrollL(&E1->GP);
+												}
+												else if(MC->MCP.x<=1100)
+												{
+													Move_CharR(MC);
+												}
+											}
+											else
+											{
+												Move_CharR(MC);
+											}
+											if(MC->MinJ==1)
+											{
+												Anim_CharR(MC,Screen,NC);
+											}
+											else
+											{
+												MC->Img=IMG_Load("WR1.png");
+											}
+											MC->DIR=1;
+										}
+										break;
+										case SDLK_LEFT:
+										{
+											if(MC->MCP.x<=400)
+											{
+												if(BG->BGP.x<0)
+												{
+													ScrollR(&BG->BGP);
+													ScrollR(&WOS->GR1P1);
+													ScrollR(&WOS->GR1P2);
+													ScrollR(&WOS->GR1P3);
+													ScrollR(&WOS->GRS1P);
+													ScrollR(&WOS->GRXSP1);
+													ScrollR(&WOS->GRXSP2);
+													ScrollR(&WOS->GRXSP3);
+													ScrollR(&WOS->GRXSP4);
+													ScrollR(&WOS->GRXSP5);
+													ScrollR(&WOS->GRXSP6);
+													ScrollR(&WOS->GRXSP7);
+													ScrollR(&WOS->GRXSP8);
+													ScrollR(&WOS->GRXSP9);
+													ScrollR(&WOS->GRXSP10);
+													ScrollR(&WOS->GRXSP11);
+													ScrollR(&WOS->GRXSP12);
+													ScrollR(&WOS->GRXSP13);
+													ScrollR(&WOS->GR2P1);
+													ScrollR(&WOS->GR2P2);
+													ScrollR(&WOS->GREP);
+													ScrollR(&WOS->SpkP1);
+													ScrollR(&WOS->SpkP2);
+													ScrollR(&E1->Enemy_Position);
+													ScrollR(&E1->C);
+													ScrollR(&E1->GP);
+												}
+												else if(MC->MCP.x>=100)
+												{
+													Move_CharL(MC);
+												}
+											}
+											else
+											{
+												Move_CharL(MC);
+											}
+											if(MC->MinJ==1)
+											{
+												Anim_CharL(MC,Screen,NC);
+											}
+											else
+											{
+												MC->Img=IMG_Load("WL1.png");
+											}
+											MC->DIR=0;
+										}
+										break;
+										case SDLK_ESCAPE:
+										{
+											SDL_Surface *message = NULL;
+											message = load_Escapeimage();
+											apply_surface( 200, 115, message, Screen );
 
-    SDL_BlitSurface(Quit, NULL, ecran, &positionQuit);
- SDL_BlitSurface(Credits, NULL , ecran, &positionCredits);
-    SDL_Flip(ecran);
-    
+    										//Update the screen
+    											if( SDL_Flip( Screen ) == -1 )
+   												{
+   														     return 1;
+   												}
+ 											   //Wait 2 seconds
+    											SDL_Delay( 8000 );
+     											SDL_FreeSurface( message );
+     											SDL_PollEvent(&Event3);
+     											if((Event3.motion.x>PP.x+35)&&(Event3.motion.x<PP.x+265))
+   												{
+   													fprintf(stderr, "%s\n", "herreeeee");
+   												
+   												}
 
-Play2 = IMG_Load("Play2.png");
-Settings2 = IMG_Load("Settings2.png");
-Quit2 = IMG_Load("Quit2.png");
-																																																																																								
-    int continuer = 1;
-    SDL_Event event;
- 
-    while (continuer)
-    {
-        SDL_WaitEvent(&event);
-        switch(event.type)
-        {
-            case SDL_QUIT:
-                continuer = 0;
-        break ;
-case SDL_KEYUP:
-if(event.key.keysym.sym ==SDLK_ESCAPE)
-{
-continuer = 0;
-}
-if(event.key.keysym.sym ==SDLK_F1)
-{
-SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format,255 ,255,255));
-SDL_BlitSurface(imageDeFond,NULL,ecran,&positionFond);
-SDL_Flip(ecran);
-}
-if(event.key.keysym.sym ==SDLK_F2)
-{
-SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format,255 ,255,255));
-SDL_BlitSurface(imageDeFond,NULL,ecran,&positionFond);
-SDL_Flip(ecran);
-}
-break;
-case SDL_MOUSEMOTION:
-if((event.motion.x>positionPlay.x)&&(event.motion.x<positionPlay.x + positionPlay.w)&&(event.motion.y>positionPlay.y)&&(event.motion.y<positionPlay.y + positionPlay.h))
-{
-mouse=1;
-}
-if((event.motion.x>positionSettings.x)&&(event.motion.x<positionSettings.x + positionSettings.w)&&(event.motion.y>positionSettings.y)&&(event.motion.y<positionSettings.y + positionSettings.h))
-{
-mouse=2;
-}
-if((event.motion.x>positionQuit.x)&&(event.motion.x<positionQuit.x + positionQuit.w)&&(event.motion.y>positionQuit.y)&&(event.motion.y<positionQuit.y + positionQuit.h))
-{
-mouse=3;
-}
-if((event.motion.x>positionCredits.x)&&(event.motion.x<positionCredits.x + positionCredits.w)&&(event.motion.y>positionCredits.y)&&(event.motion.y<positionCredits.y + positionCredits.h))
-{
-mouse=4;
-}
-break;
-case SDL_MOUSEBUTTONUP:
-if((event.button.button == SDL_BUTTON_LEFT)&&(mouse == 1))
-{
+   													GamePlay=0;
+											//
+										}
+										break;
+									}
+								}
+								break;
+								case SDL_KEYUP:
+								{
+									switch(Event1.key.keysym.sym)
+									{
+										case SDLK_RIGHT:
+										{
+											*NC=0;
+											if(MC->MinJ==1)
+											{
+												MC->Img=IMG_Load("SR1.png");
+											}
+											else
+											{
+												MC->Img=IMG_Load("WR1.png");
+											}	
+										}
+										break;
+										case SDLK_LEFT:
+										{
+											*NC=0;
+											if(MC->MinJ==1)
+											{
+												MC->Img=IMG_Load("SL1.png");
+											}
+											else
+											{
+												MC->Img=IMG_Load("WL1.png");
+											}
+										}
+										break;
+									}
+								}
+								break;
+								case SDL_QUIT:
+								{
+									GamePlay=0;
+									Exit=1;
+								}
+								break;
+							}
+						}
+						GamePlay=1;
+					}
+				}				
+		}
+		else if((Event.motion.y>PS.y+35)&&(Event.motion.y<PS.y+265)&&(Event.motion.x>PS.x+35)&&(Event.motion.x<PS.x+265))
+		{
+				SDL_BlitSurface(Play1,NULL,Screen,&PP);
+				Anim_SetsB(Sets2,Screen,PS,NS);
+				SDL_BlitSurface(Quit1,NULL,Screen,&PQ);
+				if(Event.button.button==SDL_BUTTON_LEFT)
+				{
+					//if(Event.type==SDL_MOUSEBUTTONDOWN)
+					//{
+						SDL_BlitSurface(Play1,NULL,Screen,&PP);
+						SDL_BlitSurface(Sets3,NULL,Screen,&PS);
+						SDL_BlitSurface(Quit1,NULL,Screen,&PQ);
+						SDL_Flip(Screen);
+						SDL_Delay(300);
+					//}
+					//else if(Event.type==SDL_MOUSEBUTTONUP)
+					//{
+					//}
+				}
+		}
+		else if((Event.motion.y>PQ.y+35)&&(Event.motion.y<PQ.y+265)&&(Event.motion.x>PQ.x+35)&&(Event.motion.x<PQ.x+265))
+		{
+			SDL_BlitSurface(Play1,NULL,Screen,&PP);
+			SDL_BlitSurface(Sets1,NULL,Screen,&PS);
+			Anim_QuitB(Quit2,Screen,PQ,NQ);
+			if(Event.button.button==SDL_BUTTON_LEFT)
+			{
+				if(Event.type==SDL_MOUSEBUTTONDOWN)
+				{
+					SDL_BlitSurface(Play1,NULL,Screen,&PP);
+					SDL_BlitSurface(Sets1,NULL,Screen,&PS);
+					SDL_BlitSurface(Quit3,NULL,Screen,&PQ);
+					SDL_Flip(Screen);
+					SDL_Delay(300);
+				}
+				else if(Event.type==SDL_MOUSEBUTTONUP)
+				{
+					Exit=1;
+				}
+			}
+		}
+		else
+		{
+			SDL_BlitSurface(Play1,NULL,Screen,&PP);
+			SDL_BlitSurface(Sets1,NULL,Screen,&PS);
+			SDL_BlitSurface(Quit1,NULL,Screen,&PQ);
+		}
 
-SDL_BlitSurface(Play2, NULL, ecran, &positionPlay);
-SDL_Flip(ecran);
-Mix_PlayChannel(-1, click, 0);
-SDL_Delay(500);
-SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format,255 ,255,255));
-SDL_BlitSurface(imageDeFond,NULL,ecran,&positionFond);
-SDL_Flip(ecran);
-} 
-if((event.button.button == SDL_BUTTON_LEFT)&&(mouse == 2))
-{
-SDL_BlitSurface(Settings2, NULL, ecran, &positionSettings);
-SDL_Flip(ecran);
-Mix_PlayChannel(-1, click, 0);
-SDL_Delay(500);
-SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format,255 ,255,255));
-SDL_BlitSurface(Settings3,NULL,ecran,&positionFond);
-SDL_Flip(ecran);
-} 
-if((event.button.button == SDL_BUTTON_LEFT) && (mouse == 3))
-{
-SDL_BlitSurface(Quit2, NULL, ecran, &positionQuit);
-SDL_Flip(ecran);
-Mix_PlayChannel(-1, click, 0);
-SDL_Delay(500);
-continuer = 0;
+		SDL_Flip(Screen);
+	}
+	free(NP);
+	free(NS);
+	free(NQ);
+	free(NB);
+	SDL_FreeSurface(Title);
+	SDL_FreeSurface(Screen);
+	SDL_FreeSurface(Background0);
+	SDL_FreeSurface(Play1);
+	SDL_FreeSurface(Play2);
+	SDL_FreeSurface(Play3);
+	SDL_FreeSurface(Sets1);
+	SDL_FreeSurface(Sets2);
+	SDL_FreeSurface(Sets3);
+	SDL_FreeSurface(Quit1);
+	SDL_FreeSurface(Quit2);
+	SDL_FreeSurface(Quit3);
+	free(WOS);
+	free(MC);
+	free(E1);
+	free(BG);
+	SDL_QUIT;
+	return EXIT_SUCCESS;
 }
-if((event.button.button == SDL_BUTTON_LEFT) && (mouse == 4))
-{
-SDL_BlitSurface(Credits2, NULL, ecran, &positionCredits);
-SDL_Flip(ecran);
-Mix_PlayChannel(-1, click, 0);
-SDL_Delay(500);
-SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format,255 ,255,255));
-SDL_BlitSurface(Credits3,NULL,ecran,&positionFond);
-SDL_Flip(ecran);
-}
-break ;
-}
-}
-Mix_FreeMusic(music);
-Mix_FreeChunk (click);
-Mix_CloseAudio();
-SDL_FreeSurface(imageDeFond);
-SDL_FreeSurface(Play);
-SDL_FreeSurface(Settings);
-SDL_FreeSurface(Quit);
-SDL_FreeSurface(Play2);
-SDL_FreeSurface(Settings2);
-SDL_FreeSurface(Settings3);
-SDL_FreeSurface(Quit2);
-SDL_FreeSurface(title);
-SDL_FreeSurface(Credits);
-SDL_FreeSurface(Credits2);
-SDL_FreeSurface(Credits3);
-SDL_Quit();
- 
-    return EXIT_SUCCESS;
-}
+
